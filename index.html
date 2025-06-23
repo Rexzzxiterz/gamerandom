@@ -3,57 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spaceman Game</title>
+    <title>Space Explorer Game Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .spaceman-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #6d28d9;
+            --secondary: #10b981;
+            --accent: #f59e0b;
         }
         
-        .spaceman-part {
-            position: absolute;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .letter-box {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 50px;
-            margin: 0 5px;
-            border-bottom: 3px solid #3b82f6;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        
-        .keyboard-key {
-            width: 40px;
-            height: 40px;
-            margin: 5px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .keyboard-key:hover {
-            transform: translateY(-2px);
-        }
-        
-        .keyboard-key:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .space-bg {
-            background: linear-gradient(to bottom, #000428, #004e92);
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at center, #000428, #020024);
+            color: white;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .game-card {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
         }
         
         .star {
@@ -64,332 +41,277 @@
         }
         
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
         
-        .rocket {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            transition: all 1s ease-in-out;
+        .animated-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+            box-shadow: 0 4px 15px 0 rgba(109, 40, 217, 0.5);
         }
         
-        .rocket.launch {
-            transform: translateY(-100vh) rotate(45deg);
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        .planet {
+        #game-container {
+            transition: all 0.5s ease;
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .space-particle {
             position: absolute;
             border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: float var(--duration) linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) translateX(100px) rotate(360deg); }
         }
     </style>
 </head>
-<body class="space-bg text-white overflow-hidden">
+<body class="relative">
     <!-- Stars background -->
     <div id="stars"></div>
     
-    <!-- Planets -->
-    <div class="planet bg-yellow-400 w-20 h-20 top-1/4 left-1/4 opacity-30"></div>
-    <div class="planet bg-red-400 w-16 h-16 top-1/3 right-1/4 opacity-40"></div>
-    <div class="planet bg-blue-400 w-24 h-24 bottom-1/4 right-1/3 opacity-20"></div>
+    <!-- Floating particles -->
+    <div id="particles"></div>
     
-    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
-        <h1 class="text-4xl font-bold mb-6 text-center glow">SPACEMAN</h1>
-        
-        <div class="spaceman-container mb-8">
-            <!-- Spaceman parts (will be revealed with wrong guesses) -->
-            <div class="spaceman-part" id="part1">🚀</div>
-            <div class="spaceman-part" id="part2">👩‍🚀</div>
-            <div class="spaceman-part" id="part3">🪐</div>
-            <div class="spaceman-part" id="part4">🌌</div>
-            <div class="spaceman-part" id="part5">☄️</div>
-            <div class="spaceman-part" id="part6">👽</div>
+    <!-- Main navigation -->
+    <nav class="bg-black bg-opacity-50 backdrop-blur-md py-4 sticky top-0 z-50 border-b border-purple-900">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="text-2xl">🚀</div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-teal-400 bg-clip-text text-transparent">Space Explorer</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="hover:text-purple-400 transition">Home</a>
+                <a href="#games" class="hover:text-purple-400 transition">Games</a>
+                <a href="#about" class="hover:text-purple-400 transition">About</a>
+                <a href="#leaderboard" class="hover:text-purple-400 transition">Leaderboard</a>
+            </div>
+            <button class="animated-btn px-6 py-2 rounded-full font-bold text-white md:hidden">
+                Menu
+            </button>
         </div>
-        
-        <div class="mb-8 text-center">
-            <p class="mb-4">Tebak kata tentang luar angkasa:</p>
-            <div id="word-display" class="flex justify-center flex-wrap mb-4"></div>
-            <p id="hint" class="text-blue-300 italic"></p>
-        </div>
-        
-        <div class="mb-8">
-            <p class="text-center mb-2">Sisa nyawa: <span id="lives" class="font-bold">6</span></p>
-            <div class="w-full bg-gray-700 rounded-full h-4">
-                <div id="life-bar" class="bg-red-500 h-4 rounded-full" style="width: 100%"></div>
-            </div>
-        </div>
-        
-        <div class="text-center mb-8">
-            <p class="mb-2">Huruf yang sudah ditebak:</p>
-            <div id="guessed-letters" class="flex justify-center flex-wrap max-w-md"></div>
-        </div>
-        
-        <div class="keyboard mb-8">
-            <div class="flex justify-center">
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="A">A</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="B">B</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="C">C</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="D">D</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="E">E</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="F">F</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="G">G</button>
-            </div>
-            <div class="flex justify-center">
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="H">H</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="I">I</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="J">J</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="K">K</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="L">L</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="M">M</button>
-            </div>
-            <div class="flex justify-center">
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="N">N</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="O">O</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="P">P</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Q">Q</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="R">R</button>
-            </div>
-            <div class="flex justify-center">
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="S">S</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="T">T</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="U">U</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="V">V</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="W">W</button>
-            </div>
-            <div class="flex justify-center">
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="X">X</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Y">Y</button>
-                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Z">Z</button>
-            </div>
-        </div>
-        
-        <div class="rocket text-4xl">🚀</div>
-        
-        <div id="game-over-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-10">
-            <div class="bg-gray-800 rounded-lg p-8 max-w-md w-full text-center">
-                <h2 id="result-title" class="text-3xl font-bold mb-4"></h2>
-                <p id="result-message" class="mb-4"></p>
-                <p class="mb-2">Kata yang benar: <span id="correct-word" class="font-bold"></span></p>
-                <button id="play-again-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mt-4">
-                    Main Lagi
-                </button>
-            </div>
-        </div>
-    </div>
+    </nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Game elements
-            const wordDisplay = document.getElementById('word-display');
-            const hintElement = document.getElementById('hint');
-            const livesElement = document.getElementById('lives');
-            const lifeBar = document.getElementById('life-bar');
-            const guessedLettersElement = document.getElementById('guessed-letters');
-            const keyboardKeys = document.querySelectorAll('.keyboard-key');
-            const gameOverModal = document.getElementById('game-over-modal');
-            const resultTitle = document.getElementById('result-title');
-            const resultMessage = document.getElementById('result-message');
-            const correctWordElement = document.getElementById('correct-word');
-            const playAgainBtn = document.getElementById('play-again-btn');
-            const rocket = document.querySelector('.rocket');
-            const spacemanParts = document.querySelectorAll('.spaceman-part');
+    <!-- Hero section -->
+    <section id="home" class="relative py-20">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Explore the <span class="bg-gradient-to-r from-purple-600 to-teal-400 bg-clip-text text-transparent">Universe</span> Through Games
+                </h1>
+                <p class="text-lg text-gray-300 mb-8 max-w-lg">
+                    Embark on an interstellar adventure with our collection of space-themed games. Test your skills, challenge friends, and reach for the stars!
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#games" class="animated-btn px-8 py-3 rounded-full font-bold text-white">
+                        Play Now
+                    </a>
+                    <a href="#leaderboard" class="px-8 py-3 rounded-full font-bold text-white border-2 border-purple-600 hover:bg-purple-600 transition">
+                        View Leaderboard
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-64 h-64 md:w-80 md:h-80">
+                    <div class="absolute inset-0 bg-purple-900 rounded-full opacity-20 blur-xl"></div>
+                    <div class="absolute inset-4 bg-gradient-to-br from-purple-900 to-indigo-900 rounded-full flex items-center justify-center floating">
+                        <div class="text-7xl">🌌</div>
+                    </div>
+                    <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-teal-600 rounded-full opacity-20 blur-lg"></div>
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-600 rounded-full opacity-20 blur-lg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games section -->
+    <section id="games" class="py-20 bg-gradient-to-b from-black to-purple-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Featured Games</h2>
+            <p class="text-gray-300 text-center max-w-2xl mx-auto mb-12">
+                Choose your interstellar challenge from our collection of space adventures
+            </p>
             
-            // Space words with hints
-            const words = [
-                { word: "ROKET", hint: "Kendaraan luar angkasa" },
-                { word: "BULAN", hint: "Satelit alami Bumi" },
-                { word: "MATAHARI", hint: "Bintang di pusat tata surya" },
-                { word: "GALAKSI", hint: "Kumpulan besar bintang dan materi antarbintang" },
-                { word: "PLANET", hint: "Benda langit yang mengorbit bintang" },
-                { word: "ASTEROID", hint: "Batu luar angkasa yang lebih kecil dari planet" },
-                { word: "KOMET", hint: "Benda es yang mengembang saat mendekati matahari" },
-                { word: "NEBULA", hint: "Awan gas dan debu di antariksa" },
-                { word: "SATELIT", hint: "Benda yang mengorbit benda lain" },
-                { word: "ASTRONOT", hint: "Penjelajah luar angkasa" }
-            ];
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Memory Card Game -->
+                <div class="game-card bg-gray-900 rounded-xl overflow-hidden border border-purple-800">
+                    <div class="relative h-48 bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
+                        <div class="text-7xl">🃏</div>
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm">
+                            Memory Game
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Cosmic Memory</h3>
+                        <p class="text-gray-300 mb-4">
+                            Test your memory by matching pairs of space icons in this challenging cosmic matching game.
+                        </p>
+                        <button onclick="loadGame('memory')" class="w-full bg-purple-700 hover:bg-purple-600 text-white py-2 rounded-lg transition">
+                            Play Now
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Spaceman Game -->
+                <div class="game-card bg-gray-900 rounded-xl overflow-hidden border border-purple-800">
+                    <div class="relative h-48 bg-gradient-to-br from-red-900 to-orange-900 flex items-center justify-center">
+                        <div class="text-7xl">👨‍🚀</div>
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm">
+                            Word Game
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Spaceman Adventure</h3>
+                        <p class="text-gray-300 mb-4">
+                            Guess the space-related word before your astronaut runs out of oxygen in this exciting word game.
+                        </p>
+                        <button onclick="loadGame('spaceman')" class="w-full bg-purple-700 hover:bg-purple-600 text-white py-2 rounded-lg transition">
+                            Play Now
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Asteroid Shooter -->
+                <div class="game-card bg-gray-900 rounded-xl overflow-hidden border border-purple-800">
+                    <div class="relative h-48 bg-gradient-to-br from-gray-900 to-blue-900 flex items-center justify-center">
+                        <div class="text-7xl">💥</div>
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm">
+                            Action Game
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Asteroid Blaster</h3>
+                        <p class="text-gray-300 mb-4">
+                            Dodge and destroy incoming asteroids in this fast-paced space shooter. How long can you survive?
+                        </p>
+                        <button onclick="loadGame('asteroid')" class="w-full bg-purple-700 hover:bg-purple-600 text-white py-2 rounded-lg transition">
+                            Play Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic game container -->
+    <section id="game-container" class="min-h-screen py-20 hidden">
+        <div class="container mx-auto px-4">
+            <button onclick="exitGame()" class="mb-6 flex items-center text-purple-400 hover:text-white transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back to Game Hub
+            </button>
             
-            // Game variables
-            let selectedWord = '';
-            let selectedHint = '';
-            let guessedLetters = [];
-            let wrongGuesses = 0;
-            const maxWrongGuesses = 6;
-            let gameActive = true;
+            <div id="game-content" class="bg-gray-900 rounded-xl p-6 border border-purple-800">
+                <!-- Game will be loaded here dynamically -->
+                <div class="text-center py-20">
+                    <div class="text-7xl mb-6">🚀</div>
+                    <h3 class="text-2xl font-bold mb-2">Loading Space Adventure...</h3>
+                    <p class="text-gray-400">Preparing your cosmic journey</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard section -->
+    <section id="leaderboard" class="py-20 bg-gradient-to-b from-purple-900 to-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Cosmic Leaderboard</h2>
+            <p class="text-gray-300 text-center max-w-2xl mx-auto mb-12">
+                See how you stack up against other space explorers across the universe
+            </p>
             
-            // Create stars background
-            function createStars() {
-                const starsContainer = document.getElementById('stars');
-                const starCount = 100;
-                
-                for (let i = 0; i < starCount; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    
-                    // Random properties
-                    const size = Math.random() * 3;
-                    const posX = Math.random() * window.innerWidth;
-                    const posY = Math.random() * window.innerHeight;
-                    const duration = Math.random() * 5 + 3;
-                    
-                    // Apply styles
-                    star.style.width = `${size}px`;
-                    star.style.height = `${size}px`;
-                    star.style.left = `${posX}px`;
-                    star.style.top = `${posY}px`;
-                    star.style.setProperty('--duration', `${duration}s`);
-                    
-                    starsContainer.appendChild(star);
-                }
-            }
-            
-            // Initialize game
-            function initGame() {
-                // Reset game state
-                guessedLetters = [];
-                wrongGuesses = 0;
-                gameActive = true;
-                
-                // Hide all spaceman parts
-                spacemanParts.forEach(part => {
-                    part.style.opacity = '0';
-                });
-                
-                // Reset rocket
-                rocket.classList.remove('launch');
-                
-                // Select random word
-                const randomIndex = Math.floor(Math.random() * words.length);
-                selectedWord = words[randomIndex].word;
-                selectedHint = words[randomIndex].hint;
-                
-                // Update UI
-                hintElement.textContent = `Petunjuk: ${selectedHint}`;
-                livesElement.textContent = maxWrongGuesses - wrongGuesses;
-                lifeBar.style.width = '100%';
-                lifeBar.className = 'bg-red-500 h-4 rounded-full';
-                
-                // Clear guessed letters
-                guessedLettersElement.innerHTML = '';
-                
-                // Enable all keyboard keys
-                keyboardKeys.forEach(key => {
-                    key.disabled = false;
-                    key.className = 'keyboard-key bg-gray-700 hover:bg-gray-600';
-                });
-                
-                // Display word as blanks
-                wordDisplay.innerHTML = '';
-                for (let i = 0; i < selectedWord.length; i++) {
-                    const letterBox = document.createElement('div');
-                    letterBox.className = 'letter-box';
-                    letterBox.textContent = '_';
-                    letterBox.id = `letter-${i}`;
-                    wordDisplay.appendChild(letterBox);
-                }
-                
-                // Hide game over modal
-                gameOverModal.classList.add('hidden');
-            }
-            
-            // Check if letter is in word
-            function checkLetter(letter) {
-                if (!gameActive || guessedLetters.includes(letter)) return;
-                
-                guessedLetters.push(letter);
-                
-                // Display guessed letter
-                const guessedLetterElement = document.createElement('span');
-                guessedLetterElement.textContent = `${letter} `;
-                guessedLetterElement.className = 'mx-1';
-                guessedLettersElement.appendChild(guessedLetterElement);
-                
-                if (selectedWord.includes(letter)) {
-                    // Correct guess
-                    for (let i = 0; i < selectedWord.length; i++) {
-                        if (selectedWord[i] === letter) {
-                            document.getElementById(`letter-${i}`).textContent = letter;
-                        }
-                    }
-                    
-                    // Check if player won
-                    if (isWordGuessed()) {
-                        endGame(true);
-                    }
-                } else {
-                    // Wrong guess
-                    wrongGuesses++;
-                    livesElement.textContent = maxWrongGuesses - wrongGuesses;
-                    lifeBar.style.width = `${100 - (wrongGuesses / maxWrongGuesses) * 100}%`;
-                    
-                    // Reveal spaceman part
-                    if (wrongGuesses <= maxWrongGuesses) {
-                        spacemanParts[wrongGuesses - 1].style.opacity = '1';
-                    }
-                    
-                    // Check if player lost
-                    if (wrongGuesses >= maxWrongGuesses) {
-                        endGame(false);
-                    }
-                }
-            }
-            
-            // Check if entire word is guessed
-            function isWordGuessed() {
-                for (let i = 0; i < selectedWord.length; i++) {
-                    if (document.getElementById(`letter-${i}`).textContent === '_') {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            
-            // End game
-            function endGame(isWin) {
-                gameActive = false;
-                
-                // Disable all keyboard keys
-                keyboardKeys.forEach(key => {
-                    key.disabled = true;
-                });
-                
-                // Show game over modal
-                gameOverModal.classList.remove('hidden');
-                
-                if (isWin) {
-                    resultTitle.textContent = 'Selamat! Anda Menang!';
-                    resultMessage.textContent = 'Anda berhasil menyelamatkan Spaceman!';
-                    lifeBar.className = 'bg-green-500 h-4 rounded-full';
-                    rocket.classList.add('launch');
-                } else {
-                    resultTitle.textContent = 'Game Over!';
-                    resultMessage.textContent = 'Spaceman tidak berhasil diselamatkan.';
-                    
-                    // Reveal all letters
-                    for (let i = 0; i < selectedWord.length; i++) {
-                        document.getElementById(`letter-${i}`).textContent = selectedWord[i];
-                    }
-                }
-                
-                correctWordElement.textContent = selectedWord;
-            }
-            
-            // Event listeners
-            keyboardKeys.forEach(key => {
-                key.addEventListener('click', () => {
-                    const letter = key.getAttribute('data-letter');
-                    checkLetter(letter);
-                    key.disabled = true;
-                    key.className = 'keyboard-key bg-gray-500 cursor-not-allowed';
-                });
-            });
-            
-            playAgainBtn.addEventListener('click', initGame);
-            
-            // Initialize stars and game
-            createStars();
-            initGame();
-        });
-    </script>
-</body>
-</html>
+            <div class="bg-gray-900 rounded-xl overflow-hidden border border-purple-800 max-w-4xl mx-auto">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-800">
+                        <thead class="bg-gray-800">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Rank</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Player</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Game</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Score</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-gray-900 divide-y divide-gray-800">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-yellow-600 rounded-full text-xs font-bold">1</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-white font-medium">CosmicHero</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-purple-400">Asteroid Blaster</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-400 font-bold">15,820</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-400">Today</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-gray-400 rounded-full text-xs font-bold">2</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-white font-medium">StellarQueen</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-purple-400">Cosmic Memory</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-400 font-bold">12,450</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-400">Yesterday</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-orange-600 rounded-full text-xs font-bold">3</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-white font-medium">NebulaNinja</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-purple-400">Spaceman Adventure</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-400 font-bold">10,210</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-400">2 days ago</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-purple-600 rounded-full text-xs font-bold">4</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-white font-medium">GalacticGuard</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-purple-400">Asteroid Blaster</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-400 font-bold">9,870</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-400">3 days ago</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-600 rounded-full text-xs font-bold">5</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-white font-medium">AstroWizard</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-purple-400">Cosmic Memory</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-400 font-bold">8,930</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-400">1 week ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About section -->
+    <section id="about" class="py-20 bg-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-6">About Space Explorer</h2>
+                <p class="text-gray-300 mb-8 leading-relaxed">
+                    Space Explorer is an immersive gaming hub dedicated to space-themed adventures. Our mission is to bring the wonders of the universe to your screen through interactive and engaging games. Whether you're a casual player or a competitive gamer, we have cosmic challenges for all skill levels.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
