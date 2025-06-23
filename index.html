@@ -3,77 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite FF Squad - Boy Team</title>
+    <title>AppLynk - Premium Apps Subscription</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         :root {
-            --primary: #ff5e14;
-            --secondary: #1a1a2e;
-            --accent: #00ff88;
+            --primary: #6d28d9;
+            --secondary: #4f46e5;
+            --accent: #8b5cf6;
         }
         
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f0f1a;
-            color: white;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
         }
         
-        .title-font {
-            font-family: 'Barlow Condensed', sans-serif;
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
         
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
-        .glow-text {
-            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
-        }
-        
-        .player-card {
+        .app-card {
             transition: all 0.3s ease;
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 2px solid var(--primary);
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
-        .player-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(255, 94, 20, 0.3);
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .role-badge {
+        .badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
         }
         
-        .achievement-card {
-            background: rgba(26, 26, 46, 0.7);
-            border-left: 4px solid var(--primary);
-        }
-        
-        .btn-primary {
-            background: var(--primary);
+        .pricing-card {
             transition: all 0.3s ease;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
         }
         
-        .btn-primary:hover {
-            background: #e04f10;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 94, 20, 0.4);
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-item {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-item::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
         }
         
         .nav-link {
@@ -85,7 +90,7 @@
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px;
+            bottom: -2px;
             left: 0;
             background-color: var(--primary);
             transition: width 0.3s ease;
@@ -95,303 +100,276 @@
             width: 100%;
         }
         
-        .stats-item {
-            background: rgba(26, 26, 46, 0.7);
-            border-radius: 10px;
-            padding: 20px;
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .price-tag {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             transition: all 0.3s ease;
         }
         
-        .stats-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.3);
         }
         
-        .social-icon {
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .cart-item {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .cart-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        .payment-method {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             transition: all 0.3s ease;
         }
         
-        .social-icon:hover {
-            transform: scale(1.2);
-            color: var(--primary);
+        .payment-method:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
+        .payment-method.active {
+            border-color: var(--primary);
+            background-color: #f5f3ff;
         }
         
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        #cart-sidebar {
+            transition: transform 0.3s ease;
         }
         
-        .animate-pulse-slow {
-            animation: pulse 4s ease infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-        
-        .player-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .compact-player-card {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 1px solid var(--primary);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .compact-player-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(255, 94, 20, 0.2);
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="bg-black bg-opacity-90 fixed w-full z-50">
-        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="text-2xl font-bold title-font text-white">BOY <span class="text-orange-500">SQUAD</span></span>
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#home" class="nav-link text-white hover:text-orange-500">Home</a>
-                <a href="#players" class="nav-link text-white hover:text-orange-500">Players</a>
-                <a href="#achievements" class="nav-link text-white hover:text-orange-500">Achievements</a>
-                <a href="#contact" class="nav-link text-white hover:text-orange-500">Contact</a>
-            </div>
-            <div class="md:hidden">
-                <button class="text-white focus:outline-none">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold gradient-text">AppLynk</span>
+                    </div>
+                    <div class="hidden md:ml-10 md:flex md:space-x-8">
+                        <a href="#home" class="nav-link text-gray-900 hover:text-purple-700 inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>
+                        <a href="#apps" class="nav-link text-gray-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 text-sm font-medium">Apps</a>
+                        <a href="#pricing" class="nav-link text-gray-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 text-sm font-medium">Pricing</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="cart-button" class="relative text-gray-500 hover:text-purple-700 focus:outline-none">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="cart-badge hidden">0</span>
+                    </button>
+                    <a href="#login" class="hidden md:block text-gray-500 hover:text-purple-700 px-3 py-2 text-sm font-medium">Login</a>
+                    <a href="#signup" class="hidden md:block btn-primary text-white px-4 py-2 rounded-md text-sm font-medium">Sign Up</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero min-h-screen flex items-center justify-center pt-20">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl md:text-7xl font-bold title-font mb-6 glow-text">
-                <span class="text-white">BOY</span> <span class="text-orange-500">SQUAD</span>
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-pulse-slow">
-                Elite Free Fire Team | Dominating the Battlefield
-            </p>
-            <div class="flex flex-col md:flex-row justify-center gap-4">
-                <a href="#players" class="btn-primary text-white font-bold py-3 px-8 rounded-full inline-block">
-                    Meet Our Players
-                </a>
-                <a href="#achievements" class="border-2 border-orange-500 text-white font-bold py-3 px-8 rounded-full inline-block hover:bg-orange-500 hover:bg-opacity-20 transition">
-                    Our Achievements
-                </a>
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Keranjang Belanja</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-purple-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
-            <div class="mt-16 animate-float">
-                <i class="fas fa-chevron-down text-3xl text-orange-500"></i>
+            
+            <div id="cart-items" class="mb-6">
+                <!-- Cart items will be added here dynamically -->
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-shopping-cart text-4xl mb-4 text-gray-300"></i>
+                    <p>Keranjang belanja Anda kosong</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4">
+                <div class="flex justify-between mb-4">
+                    <span class="font-medium">Total:</span>
+                    <span id="cart-total" class="font-bold">Rp0</span>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-3">Metode Pembayaran</h4>
+                    <div class="space-y-3">
+                        <div class="payment-method p-3 flex items-center cursor-pointer" data-method="dana">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-wallet text-white"></i>
+                            </div>
+                            <span>DANA</span>
+                        </div>
+                        <div class="payment-method p-3 flex items-center cursor-pointer" data-method="qris">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-qrcode text-white"></i>
+                            </div>
+                            <span>QRIS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="payment-details" class="hidden mb-6">
+                    <h4 class="font-medium mb-3">Instruksi Pembayaran</h4>
+                    <div id="dana-details" class="hidden bg-blue-50 p-4 rounded-lg">
+                        <p class="mb-2">Transfer ke nomor DANA:</p>
+                        <p class="font-bold text-lg mb-3">0823 1318 6068</p>
+                        <p class="text-sm text-gray-600">Setelah transfer, konfirmasi pembayaran dengan mengirim bukti transfer melalui WhatsApp</p>
+                    </div>
+                    <div id="qris-details" class="hidden bg-green-50 p-4 rounded-lg">
+                        <img src="https://telegra.ph/file/ffce710c4e4b1d5993921.jpg" alt="QRIS Code" class="w-full max-w-xs mx-auto mb-3">
+                        <p class="text-sm text-gray-600">Scan QR code di atas untuk melakukan pembayaran</p>
+                    </div>
+                </div>
+                
+                <button id="checkout-btn" class="w-full btn-primary text-white py-3 px-4 rounded-md font-medium mb-3">Checkout</button>
+                <button id="confirm-btn" class="w-full bg-green-600 text-white py-3 px-4 rounded-md font-medium hidden">
+                    <i class="fas fa-whatsapp mr-2"></i> Konfirmasi ke Seller
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg text-white pt-24 pb-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-10 lg:mb-0">
+                    <h1 class="text-4xl sm:text-5xl font-bold mb-6">Premium Apps <br> <span class="text-purple-200">One Simple Subscription</span></h1>
+                    <p class="text-lg mb-8 text-purple-100 max-w-lg">
+                        Get unlimited access to Alight Motion, CapCut, ChatGPT, Canva, YouTube Premium, Spotify, Netflix and 100+ more apps.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#pricing" class="bg-white text-purple-700 px-6 py-3 rounded-md text-lg font-semibold hover:bg-gray-50 text-center">View Plans</a>
+                        <a href="#apps" class="border-2 border-white text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-white hover:bg-opacity-10 text-center">Explore Apps</a>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 flex justify-center">
+                    <img src="https://illustrations.popsy.co/amber/digital-nomad.svg" alt="Premium Apps" class="w-full max-w-md">
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Players Section -->
-    <section id="players" class="py-20 bg-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold title-font mb-4">Our <span class="text-orange-500">Elite Players</span></h2>
-                <div class="w-20 h-1 bg-orange-500 mx-auto"></div>
-                <p class="mt-4 max-w-2xl mx-auto text-gray-400">
-                    Meet the warriors who dominate the battlefield with their exceptional skills
-                </p>
+    <!-- Apps Section -->
+    <section id="apps" class="py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Premium Apps</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Access these premium applications at a fraction of the cost</p>
             </div>
             
-            <h3 class="text-2xl font-bold mb-6 text-orange-500">Main Squad</h3>
-            <div class="player-grid mb-12">
-                <!-- Player Cards -->
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        PI
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Alight Motion -->
+                <div class="app-card relative">
+                    <div class="badge bg-purple-100 text-purple-800">POPULAR</div>
+                    <div class="p-5">
+                        <div class="app-icon bg-purple-600 mb-4">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Alight Motion Pro</h3>
+                        <p class="text-gray-600 mb-4">Professional video editing with premium effects</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Harga:</span>
+                            <div>
+                                <span class="font-bold text-purple-600">Rp35.000/bulan</span>
+                                <span class="block text-xs text-gray-500">RM10.50/month</span>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 bg-purple-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-purple-700 add-to-cart" data-name="Alight Motion Pro" data-price="35000">Tambah ke Keranjang</button>
                     </div>
-                    <h3 class="text-lg font-bold">PIANQT</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
                 </div>
                 
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        MA
+                <!-- CapCut -->
+                <div class="app-card relative">
+                    <div class="badge bg-green-100 text-green-800">BESTSELLER</div>
+                    <div class="p-5">
+                        <div class="app-icon bg-red-500 mb-4">
+                            <i class="fas fa-scissors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">CapCut Premium</h3>
+                        <p class="text-gray-600 mb-4">Advanced video editing tools and templates</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Harga:</span>
+                            <div>
+                                <span class="font-bold text-purple-600">Rp40.000/bulan</span>
+                                <span class="block text-xs text-gray-500">RM12.00/month</span>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 bg-purple-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-purple-700 add-to-cart" data-name="CapCut Premium" data-price="40000">Tambah ke Keranjang</button>
                     </div>
-                    <h3 class="text-lg font-bold">MADZ</h3>
-                    <p class="text-sm text-orange-500">IGL</p>
                 </div>
                 
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        YA
+                <!-- ChatGPT -->
+                <div class="app-card relative">
+                    <div class="badge bg-blue-100 text-blue-800">NEW</div>
+                    <div class="p-5">
+                        <div class="app-icon bg-green-500 mb-4">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">ChatGPT Plus</h3>
+                        <p class="text-gray-600 mb-4">Priority access to GPT-4</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Harga:</span>
+                            <div>
+                                <span class="font-bold text-purple-600">Rp50.000/bulan</span>
+                                <span class="block text-xs text-gray-500">RM15.00/month</span>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 bg-purple-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-purple-700 add-to-cart" data-name="ChatGPT Plus" data-price="50000">Tambah ke Keranjang</button>
                     </div>
-                    <h3 class="text-lg font-bold">YANZY</h3>
-                    <p class="text-sm text-orange-500">Sniper</p>
                 </div>
                 
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        SA
-                    </div>
-                    <h3 class="text-lg font-bold">SANZ</h3>
-                    <p class="text-sm text-orange-500">Support</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        WA
-                    </div>
-                    <h3 class="text-lg font-bold">WALZ</h3>
-                    <p class="text-sm text-orange-500">Flex</p>
-                </div>
-            </div>
-            
-            <h3 class="text-2xl font-bold mb-6 text-orange-500">Substitutes</h3>
-            <div class="player-grid mb-12">
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        NA
-                    </div>
-                    <h3 class="text-lg font-bold">NABIEL</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        YA
-                    </div>
-                    <h3 class="text-lg font-bold">YANZ</h3>
-                    <p class="text-sm text-orange-500">Support</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        RE
-                    </div>
-                    <h3 class="text-lg font-bold">RELL</h3>
-                    <p class="text-sm text-orange-500">Sniper</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        BA
-                    </div>
-                    <h3 class="text-lg font-bold">BAY</h3>
-                    <p class="text-sm text-orange-500">Flex</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        RA
-                    </div>
-                    <h3 class="text-lg font-bold">RAFFA</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
-                </div>
-            </div>
-            
-            <h3 class="text-2xl font-bold mb-6 text-orange-500">Reserves</h3>
-            <div class="player-grid">
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        RE
-                    </div>
-                    <h3 class="text-lg font-bold">REXZ</h3>
-                    <p class="text-sm text-orange-500">Flex</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        FA
-                    </div>
-                    <h3 class="text-lg font-bold">FAIZ</h3>
-                    <p class="text-sm text-orange-500">Support</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        RE
-                    </div>
-                    <h3 class="text-lg font-bold">REY</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        VA
-                    </div>
-                    <h3 class="text-lg font-bold">VAREL</h3>
-                    <p class="text-sm text-orange-500">Sniper</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        AV
-                    </div>
-                    <h3 class="text-lg font-bold">AVO</h3>
-                    <p class="text-sm text-orange-500">Flex</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        OK
-                    </div>
-                    <h3 class="text-lg font-bold">OKTO</h3>
-                    <p class="text-sm text-orange-500">Support</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        FA
-                    </div>
-                    <h3 class="text-lg font-bold">FADIL</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        WI
-                    </div>
-                    <h3 class="text-lg font-bold">WIZ</h3>
-                    <p class="text-sm text-orange-500">Sniper</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        RE
-                    </div>
-                    <h3 class="text-lg font-bold">REXZY</h3>
-                    <p class="text-sm text-orange-500">Fragger</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        ME
-                    </div>
-                    <h3 class="text-lg font-bold">MELPIN</h3>
-                    <p class="text-sm text-orange-500">Support</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        PY
-                    </div>
-                    <h3 class="text-lg font-bold">PYAN</h3>
-                    <p class="text-sm text-orange-500">Flex</p>
-                </div>
-                
-                <div class="compact-player-card">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gray-700 flex items-center justify-center text-2xl font-bold">
-                        PB
-                    </div>
-                    <h3 class="text-lg font-bold">PBLOW</h3>
-                    <p class="text-sm text
+                <!-- Canva -->
+                <div class="app-card relative">
+                    <div class="p-5">
+                        <div class="app-icon bg-blue-500 mb-4">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Canva Pro</h3>
+                        <p class="text-gray-600 mb-4">Premium templates and design tools</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500
