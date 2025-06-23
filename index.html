@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spaceman Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spaceman-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        
+        .spaceman-part {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .letter-box {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 50px;
+            margin: 0 5px;
+            border-bottom: 3px solid #3b82f6;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .keyboard-key {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .keyboard-key:hover {
+            transform: translateY(-2px);
+        }
+        
+        .keyboard-key:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .space-bg {
+            background: linear-gradient(to bottom, #000428, #004e92);
+            min-height: 100vh;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .rocket {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            transition: all 1s ease-in-out;
+        }
+        
+        .rocket.launch {
+            transform: translateY(-100vh) rotate(45deg);
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="space-bg text-white overflow-hidden">
+    <!-- Stars background -->
+    <div id="stars"></div>
+    
+    <!-- Planets -->
+    <div class="planet bg-yellow-400 w-20 h-20 top-1/4 left-1/4 opacity-30"></div>
+    <div class="planet bg-red-400 w-16 h-16 top-1/3 right-1/4 opacity-40"></div>
+    <div class="planet bg-blue-400 w-24 h-24 bottom-1/4 right-1/3 opacity-20"></div>
+    
+    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
+        <h1 class="text-4xl font-bold mb-6 text-center glow">SPACEMAN</h1>
+        
+        <div class="spaceman-container mb-8">
+            <!-- Spaceman parts (will be revealed with wrong guesses) -->
+            <div class="spaceman-part" id="part1">🚀</div>
+            <div class="spaceman-part" id="part2">👩‍🚀</div>
+            <div class="spaceman-part" id="part3">🪐</div>
+            <div class="spaceman-part" id="part4">🌌</div>
+            <div class="spaceman-part" id="part5">☄️</div>
+            <div class="spaceman-part" id="part6">👽</div>
+        </div>
+        
+        <div class="mb-8 text-center">
+            <p class="mb-4">Tebak kata tentang luar angkasa:</p>
+            <div id="word-display" class="flex justify-center flex-wrap mb-4"></div>
+            <p id="hint" class="text-blue-300 italic"></p>
+        </div>
+        
+        <div class="mb-8">
+            <p class="text-center mb-2">Sisa nyawa: <span id="lives" class="font-bold">6</span></p>
+            <div class="w-full bg-gray-700 rounded-full h-4">
+                <div id="life-bar" class="bg-red-500 h-4 rounded-full" style="width: 100%"></div>
+            </div>
+        </div>
+        
+        <div class="text-center mb-8">
+            <p class="mb-2">Huruf yang sudah ditebak:</p>
+            <div id="guessed-letters" class="flex justify-center flex-wrap max-w-md"></div>
+        </div>
+        
+        <div class="keyboard mb-8">
+            <div class="flex justify-center">
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="A">A</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="B">B</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="C">C</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="D">D</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="E">E</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="F">F</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="G">G</button>
+            </div>
+            <div class="flex justify-center">
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="H">H</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="I">I</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="J">J</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="K">K</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="L">L</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="M">M</button>
+            </div>
+            <div class="flex justify-center">
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="N">N</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="O">O</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="P">P</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Q">Q</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="R">R</button>
+            </div>
+            <div class="flex justify-center">
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="S">S</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="T">T</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="U">U</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="V">V</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="W">W</button>
+            </div>
+            <div class="flex justify-center">
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="X">X</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Y">Y</button>
+                <button class="keyboard-key bg-gray-700 hover:bg-gray-600" data-letter="Z">Z</button>
+            </div>
+        </div>
+        
+        <div class="rocket text-4xl">🚀</div>
+        
+        <div id="game-over-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-10">
+            <div class="bg-gray-800 rounded-lg p-8 max-w-md w-full text-center">
+                <h2 id="result-title" class="text-3xl font-bold mb-4"></h2>
+                <p id="result-message" class="mb-4"></p>
+                <p class="mb-2">Kata yang benar: <span id="correct-word" class="font-bold"></span></p>
+                <button id="play-again-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mt-4">
+                    Main Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Game elements
+            const wordDisplay = document.getElementById('word-display');
+            const hintElement = document.getElementById('hint');
+            const livesElement = document.getElementById('lives');
+            const lifeBar = document.getElementById('life-bar');
+            const guessedLettersElement = document.getElementById('guessed-letters');
+            const keyboardKeys = document.querySelectorAll('.keyboard-key');
+            const gameOverModal = document.getElementById('game-over-modal');
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            const correctWordElement = document.getElementById('correct-word');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            const rocket = document.querySelector('.rocket');
+            const spacemanParts = document.querySelectorAll('.spaceman-part');
+            
+            // Space words with hints
+            const words = [
+                { word: "ROKET", hint: "Kendaraan luar angkasa" },
+                { word: "BULAN", hint: "Satelit alami Bumi" },
+                { word: "MATAHARI", hint: "Bintang di pusat tata surya" },
+                { word: "GALAKSI", hint: "Kumpulan besar bintang dan materi antarbintang" },
+                { word: "PLANET", hint: "Benda langit yang mengorbit bintang" },
+                { word: "ASTEROID", hint: "Batu luar angkasa yang lebih kecil dari planet" },
+                { word: "KOMET", hint: "Benda es yang mengembang saat mendekati matahari" },
+                { word: "NEBULA", hint: "Awan gas dan debu di antariksa" },
+                { word: "SATELIT", hint: "Benda yang mengorbit benda lain" },
+                { word: "ASTRONOT", hint: "Penjelajah luar angkasa" }
+            ];
+            
+            // Game variables
+            let selectedWord = '';
+            let selectedHint = '';
+            let guessedLetters = [];
+            let wrongGuesses = 0;
+            const maxWrongGuesses = 6;
+            let gameActive = true;
+            
+            // Create stars background
+            function createStars() {
+                const starsContainer = document.getElementById('stars');
+                const starCount = 100;
+                
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    
+                    // Random properties
+                    const size = Math.random() * 3;
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = Math.random() * window.innerHeight;
+                    const duration = Math.random() * 5 + 3;
+                    
+                    // Apply styles
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.left = `${posX}px`;
+                    star.style.top = `${posY}px`;
+                    star.style.setProperty('--duration', `${duration}s`);
+                    
+                    starsContainer.appendChild(star);
+                }
+            }
+            
+            // Initialize game
+            function initGame() {
+                // Reset game state
+                guessedLetters = [];
+                wrongGuesses = 0;
+                gameActive = true;
+                
+                // Hide all spaceman parts
+                spacemanParts.forEach(part => {
+                    part.style.opacity = '0';
+                });
+                
+                // Reset rocket
+                rocket.classList.remove('launch');
+                
+                // Select random word
+                const randomIndex = Math.floor(Math.random() * words.length);
+                selectedWord = words[randomIndex].word;
+                selectedHint = words[randomIndex].hint;
+                
+                // Update UI
+                hintElement.textContent = `Petunjuk: ${selectedHint}`;
+                livesElement.textContent = maxWrongGuesses - wrongGuesses;
+                lifeBar.style.width = '100%';
+                lifeBar.className = 'bg-red-500 h-4 rounded-full';
+                
+                // Clear guessed letters
+                guessedLettersElement.innerHTML = '';
+                
+                // Enable all keyboard keys
+                keyboardKeys.forEach(key => {
+                    key.disabled = false;
+                    key.className = 'keyboard-key bg-gray-700 hover:bg-gray-600';
+                });
+                
+                // Display word as blanks
+                wordDisplay.innerHTML = '';
+                for (let i = 0; i < selectedWord.length; i++) {
+                    const letterBox = document.createElement('div');
+                    letterBox.className = 'letter-box';
+                    letterBox.textContent = '_';
+                    letterBox.id = `letter-${i}`;
+                    wordDisplay.appendChild(letterBox);
+                }
+                
+                // Hide game over modal
+                gameOverModal.classList.add('hidden');
+            }
+            
+            // Check if letter is in word
+            function checkLetter(letter) {
+                if (!gameActive || guessedLetters.includes(letter)) return;
+                
+                guessedLetters.push(letter);
+                
+                // Display guessed letter
+                const guessedLetterElement = document.createElement('span');
+                guessedLetterElement.textContent = `${letter} `;
+                guessedLetterElement.className = 'mx-1';
+                guessedLettersElement.appendChild(guessedLetterElement);
+                
+                if (selectedWord.includes(letter)) {
+                    // Correct guess
+                    for (let i = 0; i < selectedWord.length; i++) {
+                        if (selectedWord[i] === letter) {
+                            document.getElementById(`letter-${i}`).textContent = letter;
+                        }
+                    }
+                    
+                    // Check if player won
+                    if (isWordGuessed()) {
+                        endGame(true);
+                    }
+                } else {
+                    // Wrong guess
+                    wrongGuesses++;
+                    livesElement.textContent = maxWrongGuesses - wrongGuesses;
+                    lifeBar.style.width = `${100 - (wrongGuesses / maxWrongGuesses) * 100}%`;
+                    
+                    // Reveal spaceman part
+                    if (wrongGuesses <= maxWrongGuesses) {
+                        spacemanParts[wrongGuesses - 1].style.opacity = '1';
+                    }
+                    
+                    // Check if player lost
+                    if (wrongGuesses >= maxWrongGuesses) {
+                        endGame(false);
+                    }
+                }
+            }
+            
+            // Check if entire word is guessed
+            function isWordGuessed() {
+                for (let i = 0; i < selectedWord.length; i++) {
+                    if (document.getElementById(`letter-${i}`).textContent === '_') {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            
+            // End game
+            function endGame(isWin) {
+                gameActive = false;
+                
+                // Disable all keyboard keys
+                keyboardKeys.forEach(key => {
+                    key.disabled = true;
+                });
+                
+                // Show game over modal
+                gameOverModal.classList.remove('hidden');
+                
+                if (isWin) {
+                    resultTitle.textContent = 'Selamat! Anda Menang!';
+                    resultMessage.textContent = 'Anda berhasil menyelamatkan Spaceman!';
+                    lifeBar.className = 'bg-green-500 h-4 rounded-full';
+                    rocket.classList.add('launch');
+                } else {
+                    resultTitle.textContent = 'Game Over!';
+                    resultMessage.textContent = 'Spaceman tidak berhasil diselamatkan.';
+                    
+                    // Reveal all letters
+                    for (let i = 0; i < selectedWord.length; i++) {
+                        document.getElementById(`letter-${i}`).textContent = selectedWord[i];
+                    }
+                }
+                
+                correctWordElement.textContent = selectedWord;
+            }
+            
+            // Event listeners
+            keyboardKeys.forEach(key => {
+                key.addEventListener('click', () => {
+                    const letter = key.getAttribute('data-letter');
+                    checkLetter(letter);
+                    key.disabled = true;
+                    key.className = 'keyboard-key bg-gray-500 cursor-not-allowed';
+                });
+            });
+            
+            playAgainBtn.addEventListener('click', initGame);
+            
+            // Initialize stars and game
+            createStars();
+            initGame();
+        });
+    </script>
+</body>
+</html>
